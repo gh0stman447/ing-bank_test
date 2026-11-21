@@ -1,0 +1,5 @@
+CREATE TABLE login_attempts (
+  email VARCHAR(254) PRIMARY KEY,
+  attempts INTEGER NOT NULL DEFAULT 0,
+  started_at TIMESTAMPTZ NOT NULL DEFAULT now()
+);
