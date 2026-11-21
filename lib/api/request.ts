@@ -9,5 +9,11 @@ export const idSchema = z
 
 export function isSameOrigin(request: Request) {
   const origin = request.headers.get('origin');
-  return !origin || origin === new URL(request.url).origin;
+  if (!origin) return true;
+
+  try {
+    return origin === new URL(process.env.APP_URL || request.url).origin;
+  } catch {
+    return false;
+  }
 }
