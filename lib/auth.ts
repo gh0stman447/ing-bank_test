@@ -6,7 +6,7 @@ import { getDb } from './db';
 import type { User } from '@/types/crm';
 
 const scryptAsync = promisify(scrypt);
-const SESSION_COOKIE = 'session';
+export const SESSION_COOKIE = 'session';
 const SESSION_SECONDS = 60 * 60 * 24 * 7;
 const hashToken = (token: string) => createHash('sha256').update(token).digest('hex');
 
@@ -14,7 +14,10 @@ export class UnauthorizedError extends Error {}
 
 export async function getCurrentUser(): Promise<User | null> {
   const token = (await cookies()).get(SESSION_COOKIE)?.value;
+  return getUserBySessionToken(token);
+}
 
+export async function getUserBySessionToken(token: string | undefined): Promise<User | null> {
   if (!token || !/^[a-f0-9]{64}$/.test(token)) return null;
 
   const result = await getDb().query<User>(
